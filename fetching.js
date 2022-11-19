@@ -78,19 +78,29 @@ function process_hospital_name(name) {
     return name;
 }
 
-async function get_hospital_wait(hospital_data) {
-    url =  hospital_wait_url + hospital_data['hospital_id'] + '/' + process_hospital_name(hospital_data['hospital_name']);
+// async function get_hospital_wait(hospital_data) {
+//     url =  hospital_wait_url + hospital_data['hospital_id'] + '/' + process_hospital_name(hospital_data['hospital_name']);
 
-    // await fetch(hospital_wait_url);
-    console.log(url);
-    const response = await fetch(url);
+//     // await fetch(hospital_wait_url);
+//     console.log(url);
+//     const response = await fetch(url);
+//     hospital_data = await response.text();
+//     return hospital_data;
+// }
+
+async function update_wait_times() {
+    const response = await fetch(hospital_wait_url);
     hospital_data = await response.text();
-    return hospital_data;
+    i = hospital_data.indexOf("var data = ") + 11;
+    hospital_data_json = "";
+    while (hospital_data[i-1] != "}") {
+        
+    }
 }
 
 // console.log('process_hospital_name of "Doctors On Duty - Seaside" : ' + process_hospital_name("Doctors On Duty - Seaside"));
-findHospitalsNear(37.396283, -122.115551, 5).then((response) => console.log(response));
-
+// findHospitalsNear(37.396283, -122.115551, 5).then((response) => console.log(response));
+update_wait_times();
 
 // demo_hospital_data = {"address":"2500 Grant Road, Mountain View, CA 94040","county":"Santa Clara County","fips":"060855099011013","hospital_id":"551","hospital_name":"Emergency Room (Mountain View)","lat":"37.3691517","lng":"-122.0795279","state":"CA","type_id":"1"}
 // console.log(Math.sqrt((parseFloat(demo_hospital_data["lat"]) - 0) ** 2 + (parseFloat(demo_hospital_data["lng"]) - 0) ** 2));
