@@ -10,7 +10,7 @@ MAX_HOSPITALS = 5;
 all_hospitals_api = "https://ertrack.net/api/hospitals/"
 one_hospital_api = "https://ertrack.net/api/hospital/"
 hospital_data = "/metadata/"
-hospital_wait = "/history/"
+hospital_wait_url = "/history/"
 
 // maps data api
 
@@ -18,7 +18,7 @@ hospital_wait = "/history/"
 
 
 
-// api fetching functions
+// getting hospitals
 
 function fetchAllHospitals() {
     fetch(all_hospitals_api).then((response) => response.json());
@@ -37,12 +37,23 @@ function findHospitalsNear(longitude, latitude, count) {
     hospital_data = fetchAllHospitals()
     hospital_data.sort((a,b) => coordinatesToMiles(a.longitude, b.latitude, longitude, latitude))
     hospitals = [];
-
     for (i in hospital_data) {
         if (hospitals.length >= count || coordinatesToMiles(longitude, latitude, i["lng"], i["lat"])) break;
         if (i['type_id'] == 3) continue;
+        hospitals.push(i['hospital_id']);
     }
-
     return hospitals;
+}
 
+function process_hospital_name(name) {
+    name = name.replaceAll('(', '');
+    name = name.replaceAll(' ', '-');
+    return name;
+}
+
+function get_hospital_wait(hospital_id) {
+    fetch(one_hospital_api + hospital_id + hospital_wait).then((response) => response.json());
+    hospital_data = JSON.parse(response.json);
+
+    return hospital_data;
 }
