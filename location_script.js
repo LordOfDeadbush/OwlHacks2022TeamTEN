@@ -19,23 +19,23 @@ function main() {
   if(Boolean(window.navigator.geolocation)) {
     mainSection.style.display = "flex";
     currentLocationBtn.onclick = function (e) {
-      getlocation();
+      getLocation();
     };
-    liveLocationBtn.onclick = funciton (e) {
+    liveLocationBtn.onclick = function (e) {
       liveLocation();
     };
   } else {
       alert("error");
       mainSection.style.display = "none";
       actions.style.display = "none";
-      error.stle.display = "block";
+      error.style.display = "block";
   }
 }
 
 function stopLiveLocation(id) {
   window.navigator.geolocation.clearWatch(id);
   liveLocationBtn.style.display = "inline";
-  cancelLivelLocationBtn.style.display = "none";
+  cancelLiveLocationBtn.style.display = "none";
 }
 
 function liveLocation() {
