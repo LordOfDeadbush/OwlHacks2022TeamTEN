@@ -36,7 +36,7 @@ function findDistance(long1, lat1, long2, lat2) {
 async function findHospitalsNear(longitude, latitude, count) { // TODO make sure to do everything that uses this data within an async function
     // TODO get location here
     hospital_data = await fetchAllHospitals();
-    hospital_data.sort((a,b) => findDistance(a['lng'], b['lat'], longitude, latitude))
+    hospital_data.sort((a,b) => findDistance(a['lng'], a['lat'], longitude, latitude) < findDistance(b['lng'], b['lat'], longitude, latitude))
     hospitals = [];
     for (i in hospital_data) {
         if (hospitals.length >= count ) break; //|| coordinatesToMiles(longitude, latitude, i["lng"], i["lat"])
