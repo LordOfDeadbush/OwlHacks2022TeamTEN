@@ -1,8 +1,10 @@
 
 // general params
 
-MAX_RADIUS = 20; // in miles
-MAX_HOSPITALS = 5;
+const MAX_RADIUS = 20; // in miles
+const MAX_HOSPITALS = 5;
+
+
 
 // API KEYS
 
@@ -23,26 +25,36 @@ hospital_wait_url = "https://ertrack.net/"
 async function fetchAllHospitals() {
     const response = await fetch(all_hospitals_api);
     hospital_data = await response.json();
+    for (i in hospital_data) {
+        if (hospital_data[i]['lng'] == 0 || hospital_data[i]['lng'] == 'None') {
+            hospital_data[i]['lng'] = Number.MAX_SAFE_INTEGER;
+        }
+    }
     // console.log(hospital_data);
     return hospital_data;
 }
 
-function findDistance(long1, lat1, long2, lat2) {
-    distance = (long2 - long1) ** 2 + (lat2 - lat1) ** 2;
-    distance *= 60
-    return distance;
-}
+// function findDistance(long1, lat1, long2, lat2) {
+//     distance = Math.abs(Math.sqrt(((long2 - long1) ** 2) + ((lat2 - lat1) ** 2)));
+//     // distance *= 60
+//     // console.log(distance);
+//     return distance;
+// }
 
 async function findHospitalsNear(longitude, latitude, count) { // TODO make sure to do everything that uses this data within an async function
     // TODO get location here
     hospital_data = await fetchAllHospitals();
-    hospital_data.sort((a,b) => findDistance(a['lng'], a['lat'], longitude, latitude) < findDistance(b['lng'], b['lat'], longitude, latitude))
+    console.log(longitude, latitude);
+    hospital_data.sort((a,b) => Math.sqrt(((a['lng'] - longitude) **2) + ((a['lat'] - latitude) ** 2)) - 
+        Math.sqrt(((b['lng'] - longitude) ** 2) + ((b['lat'] - latitude) ** 2)));
+    // console.log(hospital_data);
     hospitals = [];
     for (i in hospital_data) {
         if (hospitals.length >= count ) break; //|| coordinatesToMiles(longitude, latitude, i["lng"], i["lat"])
         if (hospital_data[i]['type_id'] == 3) continue;
         hospitals.push(hospital_data[i]);
     }
+    // console.log(hospital_data.slice(-5));
     return hospitals;
 }
 
