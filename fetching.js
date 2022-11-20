@@ -49,7 +49,7 @@ function updateDistance(longitude, latitude, hospital_data) {
     console.log(longitude);
     console.log(latitude);
     for (i in hospital_data) { 
-        hospital_data[i]['dist'] = getDistance(parseFloat(hospital_data[i]['lat']),latitude,hospital_data[i]['longitude'], latitude, longitude); 
+        hospital_data[i]['dist'] = getDistance(parseFloat(hospital_data[i]['lat']),hospital_data[i]['lng'], latitude, longitude); 
     }
 }
 
