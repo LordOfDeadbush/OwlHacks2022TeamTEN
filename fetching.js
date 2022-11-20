@@ -18,12 +18,12 @@ function pivotImplementation(arr, start, end) {
     const pivotValue = arr[end];
     let pivotIndex = start;
     for (let i = start; i < end; i++) {
-        if (arr[i]["dist"] < pivotValue) {
-            [arr[i]["dist"], arr[pivotIndex]["dist"] = [arr[pivotIndex]["dist"], arr[i]["dist"];
+        if (arr[i]["dist"] > pivotValue) {
+            [arr[i]["dist"], arr[pivotIndex]["dist"] = [arr[pivotIndex]["dist"], arr[i]["dist"]]];
             pivotIndex++;
         }
     }
-    [arr[pivotIndex]["dist"], arr[end]["dist"] = [arr[end]["dist"], arr[pivotIndex]["dist"];
+    [arr[pivotIndex]["dist"], arr[end]["dist"] = [arr[end]["dist"], arr[pivotIndex]["dist"]]];
     return pivotIndex;
 }
 
@@ -82,13 +82,16 @@ async function findHospitalsNear(longitude, latitude, count) {
     hospital_data = await fetchAllHospitals();
     // console.log(longitude, latitude);
     updateDistance(longitude, latitude, hospital_data);
+    update_wait_times(hospital_data);
     // hospital_data.sort((a,b) => a["dist"] - b["dist"]);
-    qsRecursive(hospital_data, 0, hospital_data.length - 1)
+    // qsRecursive(hospital_data, 0, hospital_data.length - 1)
+    hospital_data.sort((a,b) => a["dist"] - b["dist"]);
+    // hospital_data.reverse();
     // console.log(hospital_data);
     hospitals = [];
     for (i in hospital_data) {
         if (hospitals.length >= count) break; //|| coordinatesToMiles(longitude, latitude, i["lng"], i["lat"])
-        if (hospital_data[i]["type_id"] == 3) continue;
+        // if (hospital_data[i]["type_id"] == 3) continue;
         hospitals.push(hospital_data[i]);
     }
     // console.log(hospital_data.slice(-5));
@@ -136,6 +139,4 @@ async function update_wait_times(ext_hospital_data) {
     return ext_hospital_data;
 }
 
-findHospitalsNear(37.361915, -122.125654, 5).then((response) =>
-    update_wait_times(response).then((response2) => console.log(response2))
-);
+findHospitalsNear(-122.125654, 37.361915, 5).then((response) => console.log(response));
