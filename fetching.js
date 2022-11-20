@@ -138,4 +138,4 @@ async function update_wait_times(ext_hospital_data) {
     return ext_hospital_data;
 }
 
-findHospitalsNear(-122.125654, 37.361915, 5).then((response) => console.log(response));
+// findHospitalsNear(-122.125654, 37.361915, 5).then((response) => console.log(response));
