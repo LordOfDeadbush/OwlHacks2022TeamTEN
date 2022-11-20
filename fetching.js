@@ -1,6 +1,6 @@
 // general params
 
-const MAX_RADIUS = 20; // in miles
+const MAX_RADIUS = 0.33; // in miles
 const MAX_HOSPITALS = 5;
 
 // API KEYS
@@ -74,6 +74,7 @@ function updateDistance(longitude, latitude, hospital_data) {
             longitude
         );
     }
+    return hospital_data;
 }
 
 async function findHospitalsNear(longitude, latitude, count) {
@@ -81,8 +82,8 @@ async function findHospitalsNear(longitude, latitude, count) {
     // TODO get location here
     hospital_data = await fetchAllHospitals();
     // console.log(longitude, latitude);
-    updateDistance(longitude, latitude, hospital_data);
-    update_wait_times(hospital_data);
+    hospital_data = updateDistance(longitude, latitude, hospital_data);
+    hospital_data = await update_wait_times(hospital_data);
     // hospital_data.sort((a,b) => a["dist"] - b["dist"]);
     // qsRecursive(hospital_data, 0, hospital_data.length - 1)
     hospital_data.sort((a,b) => a["dist"] - b["dist"]);
@@ -91,11 +92,9 @@ async function findHospitalsNear(longitude, latitude, count) {
     hospitals = [];
     for (i in hospital_data) {
         if (hospitals.length >= count) break; //|| coordinatesToMiles(longitude, latitude, i["lng"], i["lat"])
-        // if (hospital_data[i]["type_id"] == 3) continue;
-        hospitals.push(hospital_data[i]);
+        if (hospital_data[i]["wait"] != "closed" && hospital_data[i]["dist"] <= MAX_RADIUS) hospitals.push(hospital_data[i]);
     }
-    // console.log(hospital_data.slice(-5));
-    return hospital_data;
+    return hospitals;
 }
 
 function process_hospital_name(name) {
