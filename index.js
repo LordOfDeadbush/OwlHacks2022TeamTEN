@@ -93,7 +93,9 @@ async function findHospitalsNear(longitude, latitude, count) {
         if (hospitals.length >= count) break; //|| coordinatesToMiles(longitude, latitude, i["lng"], i["lat"])
         if (hospital_data[i]["wait"] != "closed" && hospital_data[i]["dist"] <= MAX_RADIUS) hospitals.push(hospital_data[i]);
     }
-    console.log(hospitals);
+    for(i in hospitals) {
+      console.log(i);
+    }
     return hospitals;
 }
 
