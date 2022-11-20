@@ -11,6 +11,10 @@ one_hospital_api = "https://ertrack.net/api/hospital";
 hospital_data = "/metadata/";
 hospital_wait_url = "https://ertrack.net/";
 
+// hyperlink url starters
+
+gmapsurlstart = "https://www.google.com/maps/place/";
+
 // hospital api bs
 
 function pivotImplementation(arr, start, end) {
@@ -138,19 +142,37 @@ async function update_wait_times(ext_hospital_data) {
     return ext_hospital_data;
 }
 
+function formatGMapsLink(s) {
+    s = s.replaceAll(" ", "+");
+    s = gmapsurlstart + s;
+    return s;
+}
+
 function formatHospitalData(data) {
-    result = data["hospital_name"] + "\n";
-    result += data["address"] + "\n";
-    result += "current wait: " + data["wait"] + "\n";
+    result = "<h3>" + data["hospital_name"] + "</h3>";
+    result += "<a href= '"+ formatGMapsLink(data["address"]) + "'>"+data["address"]+"</a>" + "<br>";
+    result += "current wait time: " + String(Math.floor(parseInt("0"+data["wait"]))) + " minutes<br>";
     return result;
 }
 
 function formatHospitalDataList(hospitals) {
     s = ""
     for (i = 0; i < hospitals.length; i++) {
-        s += formatHospitalData(hospitals[i]) + "\n\n";
+        s += formatHospitalData(hospitals[i]) + "<br><br>";
     }
     return s
+}
+
+async function displayResults() {
+    navigator.geolocation.getCurrentPosition((position) => 
+        displayResultsFromCoords(position.coords.longitude, position.coords.latitude))
+}
+
+async function displayResultsFromCoords(lng, lat) {
+    console.log("displaying results...");
+    nearMe = await findHospitalsNear(lng, lat, 5);
+    nearMeString = formatHospitalDataList(nearMe);
+    document.getElementById("output").innerHTML = nearMeString;
 }
 
 // console.log("hi stevie");
@@ -158,4 +180,5 @@ function formatHospitalDataList(hospitals) {
 // window.navigator.geolocation.getCurrentPosition((position) => 
 //     findHospitalsNear(position.coords.longitude, position.coords.latitude, HOSPITALS));
 
-findHospitalsNear(-122.1277922, 37.3622179, 5).then((r) => console.log(formatHospitalDataList(r)));
+// findHospitalsNear(-122.1277922, 37.3622179, 5).then((r) => console.log(formatHospitalDataList(r)));
+displayResults();
