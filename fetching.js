@@ -18,12 +18,12 @@ function pivotImplementation(arr, start, end) {
     const pivotValue = arr[end];
     let pivotIndex = start;
     for (let i = start; i < end; i++) {
-        if (arr[i] < pivotValue) {
-            [arr[i], arr[pivotIndex]] = [arr[pivotIndex], arr[i]];
+        if (arr[i]["dist"] < pivotValue) {
+            [arr[i]["dist"], arr[pivotIndex]["dist"] = [arr[pivotIndex]["dist"], arr[i]["dist"];
             pivotIndex++;
         }
     }
-    [arr[pivotIndex], arr[end]] = [arr[end], arr[pivotIndex]];
+    [arr[pivotIndex]["dist"], arr[end]["dist"] = [arr[end]["dist"], arr[pivotIndex]["dist"];
     return pivotIndex;
 }
 
