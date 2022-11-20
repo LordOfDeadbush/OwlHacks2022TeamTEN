@@ -99,7 +99,7 @@ async function update_wait_times(ext_hospital_data) {
     }
     hospital_data_json = JSON.parse(hospital_data_raw); // the 6th index is the wait time
     for (i = 0; i < ext_hospital_data.length; i++) {
-        console.log(ext_hospital_data[i]["hospital_id"]);
+        // console.log(ext_hospital_data[i]["hospital_id"]);
         try {
             ext_hospital_data[i]['wait'] = hospital_data_json[ext_hospital_data[i]["hospital_id"]][6];
         } catch (e) {
@@ -110,6 +110,6 @@ async function update_wait_times(ext_hospital_data) {
     return ext_hospital_data;
 }
 
-findHospitalsNear(0, 0, 5)
+findHospitalsNear(37.361915, -122.125654, 5)
     .then((response) => update_wait_times(response).then((response2) => console.log(response2)))
 
