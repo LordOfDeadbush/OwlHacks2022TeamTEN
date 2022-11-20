@@ -93,7 +93,7 @@ async function findHospitalsNear(longitude, latitude, count) {
         if (hospitals.length >= count) break; //|| coordinatesToMiles(longitude, latitude, i["lng"], i["lat"])
         if (hospital_data[i]["wait"] != "closed" && hospital_data[i]["dist"] <= MAX_RADIUS) hospitals.push(hospital_data[i]);
     }
-    document.getElementById("output").innerHTML =formatHospitalDataList(hospitals);
+    // document.getElementById("output").innerHTML =formatHospitalDataList(hospitals);
     return hospitals;
 }
 
