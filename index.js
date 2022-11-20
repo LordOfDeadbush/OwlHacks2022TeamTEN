@@ -140,5 +140,20 @@ async function update_wait_times(ext_hospital_data) {
     return ext_hospital_data;
 }
 
+function formatHospitalData(data) {
+    result = data["hospital_name"] + "\n";
+    result += data["address"] + "\n";
+    result += "current wait: " + data["wait"] + "\n";
+    return result;
+}
+
+function formatHospitalDataList(hospitals) {
+    s = ""
+    for (i = 0; i < hospitals.length; i++) {
+        s += formatHospitalData(hospitals[i]) + "\n\n";
+    }
+    return s
+}
+
 window.navigator.geolocation.getCurrentPosition((position) => 
     findHospitalsNear(position.coords.longitude, position.coords.latitude, HOSPITALS));
