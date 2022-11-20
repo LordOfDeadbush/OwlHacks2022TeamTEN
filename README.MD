@@ -4,11 +4,11 @@ By Jason Corn, Stevie Carmichael, Kyle Chun, Nathan Le
 
 Find the project here: https://lordofdeadbush.github.io/OwlHacks2022TeamTEN/
 
-<img src="drawing.jpg" alt="E-RED-QRCODE.png" width="200"/>
+![alt_text](E-RED-QRCODE.png)
 
 E-RED is a web application that allows users to find the nearest Emergency Room locations with minimal user input.
 
-Find a demo video here: https://youtu.be/0u2D-paZwwc
+Find a demo here: https://youtu.be/1oHmqVEpgIA
 
 ![alt text](demoimage.png)
 
