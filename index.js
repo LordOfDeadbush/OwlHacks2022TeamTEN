@@ -153,5 +153,8 @@ function formatHospitalDataList(hospitals) {
     return s
 }
 
+console.log("hi stevie");
+
 window.navigator.geolocation.getCurrentPosition((position) => 
     findHospitalsNear(position.coords.longitude, position.coords.latitude, HOSPITALS));
+
