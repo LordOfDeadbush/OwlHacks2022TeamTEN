@@ -46,8 +46,8 @@ function getDistance(lat1, lng1, lat2, lng2) {
 }
 
 function updateDistance(longitude, latitude, hospital_data) {
-    console.log(longitude);
-    console.log(latitude);
+    // console.log(longitude);
+    // console.log(latitude);
     for (i in hospital_data) { 
         hospital_data[i]['dist'] = getDistance(parseFloat(hospital_data[i]['lat']),hospital_data[i]['lng'], latitude, longitude); 
     }
@@ -56,10 +56,10 @@ function updateDistance(longitude, latitude, hospital_data) {
 async function findHospitalsNear(longitude, latitude, count) { // TODO make sure to do everything that uses this data within an async function
     // TODO get location here
     hospital_data = await fetchAllHospitals();
-    console.log(longitude, latitude);
+    // console.log(longitude, latitude);
     updateDistance(longitude, latitude, hospital_data);
     hospital_data.sort((a,b) => a["dist"] - b["dist"]);
-    console.log(hospital_data);
+    // console.log(hospital_data);
     hospitals = [];
     for (i in hospital_data) {
         if (hospitals.length >= count ) break; //|| coordinatesToMiles(longitude, latitude, i["lng"], i["lat"])
@@ -67,7 +67,7 @@ async function findHospitalsNear(longitude, latitude, count) { // TODO make sure
         hospitals.push(hospital_data[i]);
     }
     // console.log(hospital_data.slice(-5));
-    return hospitals;
+    return hospital_data;
 }
 
 function process_hospital_name(name) {
@@ -88,21 +88,28 @@ function process_hospital_name(name) {
 //     return hospital_data;
 // }
 
-async function update_wait_times() {
+async function update_wait_times(ext_hospital_data) {
     const response = await fetch(hospital_wait_url);
     hospital_data = await response.text();
     i = hospital_data.indexOf("var data = ") + 11;
-    hospital_data_json = "";
+    hospital_data_raw = "";
     while (hospital_data[i-1] != "}") {
-        
+        hospital_data_raw += hospital_data[i];
+        i++;
     }
+    hospital_data_json = JSON.parse(hospital_data_raw); // the 6th index is the wait time
+    for (i = 0; i < ext_hospital_data.length; i++) {
+        console.log(ext_hospital_data[i]["hospital_id"]);
+        try {
+            ext_hospital_data[i]['wait'] = hospital_data_json[ext_hospital_data[i]["hospital_id"]][6];
+        } catch (e) {
+            ext_hospital_data[i]['wait'] = "closed";
+        };
+    }
+
+    return ext_hospital_data;
 }
 
-// console.log('process_hospital_name of "Doctors On Duty - Seaside" : ' + process_hospital_name("Doctors On Duty - Seaside"));
-// findHospitalsNear(37.396283, -122.115551, 5).then((response) => console.log(response));
-update_wait_times();
+findHospitalsNear(0, 0, 5)
+    .then((response) => update_wait_times(response).then((response2) => console.log(response2)))
 
-// demo_hospital_data = {"address":"2500 Grant Road, Mountain View, CA 94040","county":"Santa Clara County","fips":"060855099011013","hospital_id":"551","hospital_name":"Emergency Room (Mountain View)","lat":"37.3691517","lng":"-122.0795279","state":"CA","type_id":"1"}
-// console.log(Math.sqrt((parseFloat(demo_hospital_data["lat"]) - 0) ** 2 + (parseFloat(demo_hospital_data["lng"]) - 0) ** 2));
-// console.log(getDistance(37.3691517, -122.0795279, 0 , 0));
-// get_hospital_wait(demo_hospital_data).then((response) => console.log(response));
