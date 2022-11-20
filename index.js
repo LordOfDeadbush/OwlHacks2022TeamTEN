@@ -1,6 +1,6 @@
 // general params
 
-const MAX_RADIUS = 0.33; // in miles
+const MAX_RADIUS = 0.5; // in miles
 const HOSPITALS = 5;
 
 // API KEYS
@@ -11,6 +11,8 @@ one_hospital_api = "https://ertrack.net/api/hospital";
 hospital_data = "/metadata/";
 hospital_wait_url = "https://ertrack.net/";
 
+geocoding_url = "http://api.openweathermap.org/geo/1.0/zip?zip="
+geocoding_url_2 = ",US&appid=b6f960dc7c5c11dd91fc1310192f1a94"
 // hyperlink url starters
 
 gmapsurlstart = "https://www.google.com/maps/place/";
@@ -51,24 +53,14 @@ async function fetchAllHospitals() {
             hospital_data[i]["lng"] = Number.MAX_SAFE_INTEGER;
         }
     }
-    // console.log(hospital_data);
     return hospital_data;
 }
-
-// function findDistance(long1, lat1, long2, lat2) {
-//     distance = Math.abs(Math.sqrt(((long2 - long1) ** 2) + ((lat2 - lat1) ** 2)));
-//     // distance *= 60
-//     // console.log(distance);
-//     return distance;
-// }
 
 function getDistance(lat1, lng1, lat2, lng2) {
     return Math.sqrt((lat1 - lat2) ** 2 + (lng1 - lng2) ** 2);
 }
 
 function updateDistance(longitude, latitude, hospital_data) {
-    // console.log(longitude);
-    // console.log(latitude);
     for (i in hospital_data) {
         hospital_data[i]["dist"] = getDistance(
             parseFloat(hospital_data[i]["lat"]),
@@ -81,23 +73,15 @@ function updateDistance(longitude, latitude, hospital_data) {
 }
 
 async function findHospitalsNear(longitude, latitude, count) {
-    // TODO make sure to do everything that uses this data within an async function
-    // TODO get location here
     hospital_data = await fetchAllHospitals();
-    // console.log(longitude, latitude);
     hospital_data = updateDistance(longitude, latitude, hospital_data);
     hospital_data = await update_wait_times(hospital_data);
-    // hospital_data.sort((a,b) => a["dist"] - b["dist"]);
-    // qsRecursive(hospital_data, 0, hospital_data.length - 1)
     hospital_data.sort((a, b) => a["dist"] - b["dist"]);
-    // hospital_data.reverse();
-    // console.log(hospital_data);
     hospitals = [];
     for (i in hospital_data) {
         if (hospitals.length >= count) break; //|| coordinatesToMiles(longitude, latitude, i["lng"], i["lat"])
         if (hospital_data[i]["wait"] != "closed" && hospital_data[i]["dist"] <= MAX_RADIUS) hospitals.push(hospital_data[i]);
     }
-    // document.getElementById("output").innerHTML =formatHospitalDataList(hospitals);
     return hospitals;
 }
 
@@ -108,16 +92,6 @@ function process_hospital_name(name) {
     name = name.toLowerCase();
     return name;
 }
-
-// async function get_hospital_wait(hospital_data) {
-//     url =  hospital_wait_url + hospital_data['hospital_id'] + '/' + process_hospital_name(hospital_data['hospital_name']);
-
-//     // await fetch(hospital_wait_url);
-//     console.log(url);
-//     const response = await fetch(url);
-//     hospital_data = await response.text();
-//     return hospital_data;
-// }
 
 async function update_wait_times(ext_hospital_data) {
     const response = await fetch(hospital_wait_url);
@@ -152,18 +126,19 @@ function formatHospitalData(data) {
     result = "<h3>" + data["hospital_name"] + "</h3>";
     result += "<a href= '"+ formatGMapsLink(data["address"]) + "'>"+data["address"]+"</a>" + "<br>";
     result += "current wait time: " + String(Math.floor(parseInt("0"+data["wait"]))) + " minutes<br>";
+    result += "distance: " + String(Math.round(parseFloat(data["dist"])*60)) + " miles";
     return result;
 }
 
 function formatHospitalDataList(hospitals) {
     s = ""
     for (i = 0; i < hospitals.length; i++) {
-        s += formatHospitalData(hospitals[i]) + "<br><br>";
+        s += formatHospitalData(hospitals[i]) + "<br>";
     }
     return s
 }
 
-async function displayResults() {
+async function displayResultsFromLocation() {
     navigator.geolocation.getCurrentPosition((position) => 
         displayResultsFromCoords(position.coords.longitude, position.coords.latitude))
 }
@@ -175,10 +150,11 @@ async function displayResultsFromCoords(lng, lat) {
     document.getElementById("output").innerHTML = nearMeString;
 }
 
-// console.log("hi stevie");
+// async function displayResultsFromZipCode() {
+//     zip = document.getElementById("zip").value;
+//     result = await fetch(geocoding_url + zip + geocoding_url_2);
+//     result_json = result.json();
+//     displayResultsFromCoords(result_json.coords["lng"], result_json.coords["lat"]);
+// }
 
-// window.navigator.geolocation.getCurrentPosition((position) => 
-//     findHospitalsNear(position.coords.longitude, position.coords.latitude, HOSPITALS));
-
-// findHospitalsNear(-122.1277922, 37.3622179, 5).then((r) => console.log(formatHospitalDataList(r)));
-displayResults();
+displayResultsFromLocation();
