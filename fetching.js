@@ -17,7 +17,29 @@ hospital_wait_url = "https://ertrack.net/"
 // maps data api
 
 //...
+function pivotImplementation(info) {
+  const pivotValue = arr[end];
+  let pivotIndex = start;
+  for (let i = start; i < end; i++) {
+    if (arr[i] < pivotValue) [
+      [arr[i], arr[pivotIndex]] = [arr[pivotIndex], arr[i]];
+      pivotIndex++;
+    }
+  }
+  [arr[pivotIndex], arr[end]] = [arr[end], arr[pivotIndex]]
+  return pivotIndex;
+};
 
+function qsRecursive(arr, start, end) {
+  if(start >= end) {
+    return;
+  }
+  
+  let index = partition(arr, start, end);
+
+  quickSort(arr, start, index - 1);
+  quickSort(arr, index + 1, end);
+}
 
 
 // getting hospitals
