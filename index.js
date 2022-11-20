@@ -158,4 +158,4 @@ function formatHospitalDataList(hospitals) {
 // window.navigator.geolocation.getCurrentPosition((position) => 
 //     findHospitalsNear(position.coords.longitude, position.coords.latitude, HOSPITALS));
 
-findHospitalsNear(0, 0, 5);
+findHospitalsNear(-122.1277922, 37.3622179, 5).then((r) => console.log(formatHospitalDataList(r)));
