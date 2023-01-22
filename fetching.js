@@ -6,9 +6,9 @@ const MAX_HOSPITALS = 5;
 // API KEYS
 
 // ertrack api
-all_hospitals_api = "https://ertrack.net/api/hospitals/";
-one_hospital_api = "https://ertrack.net/api/hospital";
-hospital_data = "/metadata/";
+all_hospitals_api = "./all_hospitals.json";
+// one_hospital_api = "https://ertrack.net/api/hospital";
+// hospital_data = "/metadata/";
 hospital_wait_url = "https://ertrack.net/";
 
 // maps data api
