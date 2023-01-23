@@ -42,7 +42,7 @@ We are also very proud of the simple UI that we were able to design and implemen
 
 ## What we learned
 
-Our difficulties with the API we were using to get wait times taught us that technologies are far more dependent on their technological underpinnings than one may notice from the surface. 
+Our difficulties with the API we were using to get wait times taught us that technologies are far more dependent on their technological underpinnings than one may notice from the surface.
 
 ## What's next for E-RED
 

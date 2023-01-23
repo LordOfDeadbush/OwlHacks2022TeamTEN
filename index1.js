@@ -123,10 +123,10 @@ function formatGMapsLink(s) {
 }
 
 function formatHospitalData(data) {
-    result = "<h3>" + data["hospital_name"] + "</h3>";
-    result += "<a href= '"+ formatGMapsLink(data["address"]) + "'>"+data["address"]+"</a>" + "<br>";
+    result = "<a href= '"+ formatGMapsLink(data["address"]) + "'><div id=\"rcorners1\"><div id=\"textlight\"><h3>" + data["hospital_name"] + "</h3>";
+    result += data["address"] + "<br>";
     result += "current wait time: " + String(Math.floor(parseInt("0"+data["wait"]))) + " minutes<br>";
-    result += "distance: " + String(Math.round(parseFloat(data["dist"])*60)) + " miles";
+    result += "distance: " + String(Math.round(parseFloat(data["dist"])*60)) + " miles</div></div></a>";
     return result;
 }
 
